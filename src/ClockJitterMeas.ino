@@ -1,13 +1,15 @@
 //
 // ClockJitterMeas.ino : measurement of the jitter on a clock.
-// Negative pulses are applied to the digital input #2.
-// On each falling edge, the arduino 1MHz timer is read and its content is sent over the COM interface
+// Pulses are applied to the digital input #2.
+// On each rising edge, the arduino 1MHz timer content is sent over the COM interface.
+// The format on the COM interface is HEX ascii terminated by an EOL (end of line).
+// Selftest feature: uncomment "#define selfTest" to get pulses on output #13
 //
 
 //#define selfTest
 
 const byte pulseInput = 2; // the input on which the pulse is applied
-const byte pulseOutput = 13; // the output that generates a pulse (for autotest, connect D13 to D2)
+const byte pulseOutput = 13; // the output that generates a pulse (for selftest: connect D13 to D2)
 
 volatile unsigned long int prevTime;
 
