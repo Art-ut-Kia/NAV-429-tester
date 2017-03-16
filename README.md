@@ -1,3 +1,3 @@
-# JitterMeter
+# NAV429 Tester
 
-Associate a time stamp to each rising edge of a clock
+HW + SW to perform a self-test of Naveol NAV429 Arduino Shield
