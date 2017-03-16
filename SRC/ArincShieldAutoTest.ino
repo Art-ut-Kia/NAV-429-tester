@@ -1,8 +1,18 @@
 //
 // Arinc Shield Test.ino
-//   V1.01 (15/03/2017) : ACLK divider is a parameter, to cope with both units:
+//
+// author: JPP
+//
+// Version V1.01 (15/03/2017) : ACLK divider is a parameter, to cope with both units:
 //   - 12MHz (prototypes) or
 //   - 16MHz (serial production)
+//
+// This program is distributed in the hope that it will be useful, but without any
+// warranty; without even the implied warranty of merchantability or fitness for a
+// particular purpose. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with this
+// program. If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include <SPI.h>
