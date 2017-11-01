@@ -1,6 +1,6 @@
 # NAV429 Tester
 
-Nav429 from [Naveol](http://www.naveol.com/) is an arduino shield that brings [ARINC429](https://fr.wikipedia.org/wiki/ARINC_429) connectivity to arduino boards.
+Nav429 from [Naveol](http://www.naveol.com/) is an [arduino shield](https://en.wikipedia.org/wiki/Arduino#Shields) that brings [ARINC429](https://fr.wikipedia.org/wiki/ARINC_429) connectivity to [arduino](https://en.wikipedia.org/wiki/Arduino) boards.
 It offers 2 x A429 inputs, 1 x A429 output and an [RS422](https://en.wikipedia.org/wiki/RS-422) RX/TX.
 Optionally it can be fitted with a DC/DC converter that permits to power both Nav429 and its host CoM (computer on module) from the 28V power network of an aircraft.
 
