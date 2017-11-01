@@ -4,10 +4,13 @@ Nav429 from [Naveol](http://www.naveol.com/) is an arduino shield that brings [A
 It offers 2 x A429 inputs, 1 x A429 output and an [RS422](https://en.wikipedia.org/wiki/RS-422) RX/TX.
 Optionally it can be fitted with a DC/DC converter that permits to power both Nav429 and its host CoM (computer on module) from the 28V power network of an aircraft.
 
-The 3D view:
-[HW](https://github.com/Art-ut-Kia/NAV-429-tester/wiki/Loop-back-cable) + SW necessary to perform a self-test of [Naveol](http://www.naveol.com/) Arduino Shield [NAV429](http://www.naveol.com/index.php?menu=product&p=3http://www.naveol.com/index.php?menu=product&p=3):
+This repository contains the description of all [HW](https://github.com/Art-ut-Kia/NAV-429-tester/wiki/Loop-back-cable) + SW necessary to perform a self-test of [Naveol](http://www.naveol.com/) Arduino Shield [NAV429](http://www.naveol.com/index.php?menu=product&p=3http://www.naveol.com/index.php?menu=product&p=3).
+This material can also be used as a starting point for various Nav429-based new projects.
 
-![](https://raw.githubusercontent.com/Art-ut-Kia/NAV-429-tester/master/WikiIllustrations/Nav429_board.png)
+The 3D view:
+<p align="center">
+<img src="https://raw.githubusercontent.com/Art-ut-Kia/NAV-429-tester/master/WikiIllustrations/Nav429_board.png" width="300">
+</p>
 
 A picture of the bare board as delivered by Naveol:
 <p align="center">
