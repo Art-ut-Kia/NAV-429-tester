@@ -5,7 +5,7 @@ It offers 2 x A429 inputs, 1 x A429 output and an [RS422](https://en.wikipedia.o
 Optionally it can be fitted with a DC/DC converter that permits to power both Nav429 and its host CoM (computer on module) from the 28V power network of an aircraft.
 
 This repository contains the description of all [HW](https://github.com/Art-ut-Kia/NAV-429-tester/wiki/Loop-back-cable) + SW necessary to perform a self-test of Naveol Arduino Shield Nav429.
-The material provided here can also be used as a starting point for various Nav429-based new projects.
+The material provided here can also be used as the kickoff of any Nav429-based new project.
 
 The 3D view:
 <p align="center">
