@@ -219,8 +219,20 @@ void setup() {
   else                    Serial.println(F("Incorrect loop back of DOUT to AIN3 :("));
   Serial.println();
   
-  Serial.println(F("\t\tThat's all folks !"));
+  // ---------------------------------------------------------------------------
+  // Test of RS422 TX(H/L) and RS422 RX(H/L) signals
+  // RS422 TX(H/L) is to be looped back to RS422 RX(H/L)
+  // ---------------------------------------------------------------------------
+  Serial.print(F("Place the RS loop back jumpers (test will be performed in 5 seconds) ..."));
+  delay(5000);
+  bool rsOk = true;
+  Serial.write(0xaa); delay(2); if (Serial.read() != 0xaa) rsOk = false;
+  Serial.write(0x55); delay(2); if (Serial.read() != 0x55) rsOk = false;
+  Serial.println();
+  if (rsOk) Serial.println(F("Test of loop back of RS TX to RX is:\tPASSED"));
+  else      Serial.println(F("Incorrect loop back of RS TX to RX :("));
   
+  Serial.println(F("\t\tThat's all folks !"));
 }
 
 void loop() {
