@@ -7,6 +7,8 @@
 //   - 12MHz (prototypes) or
 //   - 16MHz (serial production)
 //
+// Version V1.02 (18/01/2018) : added a test step for RS422 loopback check
+//
 // This program is distributed in the hope that it will be useful, but without any
 // warranty; without even the implied warranty of merchantability or fitness for a
 // particular purpose. See the GNU General Public License for more details.
@@ -219,6 +221,7 @@ void setup() {
   else                    Serial.println(F("Incorrect loop back of DOUT to AIN3 :("));
   Serial.println();
   
+  // JPP V1.02 (begin ...)
   // ---------------------------------------------------------------------------
   // Test of RS422 TX(H/L) and RS422 RX(H/L) signals
   // RS422 TX(H/L) is to be looped back to RS422 RX(H/L)
@@ -231,6 +234,7 @@ void setup() {
   Serial.println();
   if (rsOk) Serial.println(F("Test of loop back of RS TX to RX is:\tPASSED"));
   else      Serial.println(F("Incorrect loop back of RS TX to RX :("));
+  // JPP V1.02 (... end)
   
   Serial.println(F("\t\tThat's all folks !"));
 }
