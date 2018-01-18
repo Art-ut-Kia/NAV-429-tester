@@ -207,7 +207,20 @@ int main() {
     if (ia3>40000 && fa3<1600) pc.printf("Test of loop back of DOUT to AIN3 is:\tPASSED\r\n");
     else pc.printf("Incorrect loop back of DOUT to AIN3 :(\r\n");
     pc.printf("\r\n");
-  
+
+    // ---------------------------------------------------------------------------
+    // Test of RS422 TX(H/L) and RS422 RX(H/L) signals
+    // RS422 TX(H/L) is to be looped back to RS422 RX(H/L)
+    // ---------------------------------------------------------------------------
+    pc.printf("Place the RS loop back jumpers (test will be performed in 5 seconds) ...\r\n");
+    wait_ms(5000);
+    bool rsOk = true;
+    pc.putc(0xaa); wait_ms(2); if (pc.getc() != 0xaa) rsOk = false;
+    pc.putc(0x55); wait_ms(2); if (pc.getc() != 0x55) rsOk = false;
+    pc.printf("\r\n");
+    if (rsOk) pc.printf("Test of loop back of RS TX to RX is:\tPASSED\r\n");
+    else      pc.printf("Incorrect loop back of RS TX to RX :(\r\n");
+
     pc.printf("\t\tThat's all folks !\r\n\r\n");
 
     // infinite loop
