@@ -5,14 +5,17 @@
  *
  *  Tested on Nucleo's F746ZG and F767ZI
  *
- *  Version: 1.01 dated 2017/04/14 (affected lines are marked "JPP V1.01")
+ *  Version: 1.01 dated 2017/01/18 (affected lines are marked "JPP V1.01")
  *  - modified ACLK div from 8 to 16 to accomodate the onboard oscillator
  *    reason: The prototype shields picked-up their clock (8MHz) from the
  *            nucleo board. In the serial definition, the shield have its own
  *            16MHz oscillator onboard.
  *  - after complete autotest, added a cyclic ARINC word transmission so that
- *    the ARINC signal can be analyzed with an oscilloscope
+ *    the ARINC signal can be analyzed with an oscilloscope or an AriScope:
+ *    http://www.naveol.com/index.php?menu=product&p=4
  *
+ *  Version: 1.02 dated 2018/04/14 (affected lines are marked "JPP V1.02")
+ *  - added a test step to check RS422 loopback
  */
 
 #include "mbed.h"
@@ -207,7 +210,8 @@ int main() {
     if (ia3>40000 && fa3<1600) pc.printf("Test of loop back of DOUT to AIN3 is:\tPASSED\r\n");
     else pc.printf("Incorrect loop back of DOUT to AIN3 :(\r\n");
     pc.printf("\r\n");
-
+  
+    // JPP V1.02 (begin ...)
     // ---------------------------------------------------------------------------
     // Test of RS422 TX(H/L) and RS422 RX(H/L) signals
     // RS422 TX(H/L) is to be looped back to RS422 RX(H/L)
@@ -220,6 +224,7 @@ int main() {
     pc.printf("\r\n");
     if (rsOk) pc.printf("Test of loop back of RS TX to RX is:\tPASSED\r\n");
     else      pc.printf("Incorrect loop back of RS TX to RX :(\r\n");
+    // JPP V1.02 (... end)
 
     pc.printf("\t\tThat's all folks !\r\n\r\n");
 
