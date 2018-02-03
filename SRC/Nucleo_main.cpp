@@ -3,15 +3,13 @@
  *    File:     main.cpp
  *    Author:   Jean-Paul PETILLON
  *
- *  Tested on Nucleo's F746ZG and F767ZI
- *
- *  Version: 1.01 dated 2017/01/18 (affected lines are marked "JPP V1.01")
+ *  Version: 1.01 dated 2017/04/14 (affected lines are marked "JPP V1.01")
  *  - modified ACLK div from 8 to 16 to accomodate the onboard oscillator
  *    reason: The prototype shields picked-up their clock (8MHz) from the
  *            nucleo board. In the serial definition, the shield have its own
  *            16MHz oscillator onboard.
  *  - after complete autotest, added a cyclic ARINC word transmission so that
- *    the ARINC signal can be analyzed with an oscilloscope or an AriScope:
+ *    the ARINC signal can be analyzed with an oscilloscope or an Ariscope:
  *    http://www.naveol.com/index.php?menu=product&p=4
  *
  *  Version: 1.02 dated 2018/04/14 (affected lines are marked "JPP V1.02")
@@ -188,15 +186,19 @@ int main() {
     // Test DOUT, DIN1 & DIN2 0v/open discrete ; and AIN0 .. AIN3 analog signals
     // DOUT is to be looped back to DIN1, DIN2 and AIN0 .. AIN3
     // ---------------------------------------------------------------------------
+
     DOut = 0;
+    wait_ms(1);
     char id0 = DIn0; char id1 = DIn1;
     int  ia0 = AIn0.read_u16(); int  ia1 = AIn1.read_u16();
     int  ia2 = AIn2.read_u16(); int  ia3 = AIn3.read_u16();
-    wait_ms(1);
+
     DOut = 1;
+    wait_ms(1);
     char fd0 = DIn0; char fd1 = DIn1;
     int  fa0 = AIn0.read_u16(); int  fa1 = AIn1.read_u16();
     int  fa2 = AIn2.read_u16(); int  fa3 = AIn3.read_u16();
+
     if (id0==1 && fd0==0) pc.printf("Test of loop back of DOUT to DIN0 is:\tPASSED\r\n");
     else pc.printf("Incorrect loop back of DOUT to DIN0 :(\r\n");
     if (id1==1 && fd1==0) pc.printf("Test of loop back of DOUT to DIN1 is:\tPASSED\r\n");
@@ -210,28 +212,39 @@ int main() {
     if (ia3>40000 && fa3<1600) pc.printf("Test of loop back of DOUT to AIN3 is:\tPASSED\r\n");
     else pc.printf("Incorrect loop back of DOUT to AIN3 :(\r\n");
     pc.printf("\r\n");
-  
+
     // JPP V1.02 (begin ...)
     // ---------------------------------------------------------------------------
     // Test of RS422 TX(H/L) and RS422 RX(H/L) signals
     // RS422 TX(H/L) is to be looped back to RS422 RX(H/L)
     // ---------------------------------------------------------------------------
-    pc.printf("Place the RS loop back jumpers (test will be performed in 5 seconds) ...\r\n");
+    pc.printf("Place the RS loop back jumpers (test will be performed in 5 seconds) ...");
     wait_ms(5000);
     bool rsOk = true;
-    pc.putc(0xaa); wait_ms(2); if (pc.getc() != 0xaa) rsOk = false;
-    pc.putc(0x55); wait_ms(2); if (pc.getc() != 0x55) rsOk = false;
+
+    pc.putc(0xaa);
+    wait_ms(2);
+    if (pc.readable()) {
+        if (pc.getc() != 0xaa) rsOk = false;
+    } else rsOk = false;
+
+    pc.putc(0x55);
+    wait_ms(2);
+    if (pc.readable()) {
+        if (pc.getc() != 0x55) rsOk = false;
+    } else rsOk = false;
+
     pc.printf("\r\n");
     if (rsOk) pc.printf("Test of loop back of RS TX to RX is:\tPASSED\r\n");
     else      pc.printf("Incorrect loop back of RS TX to RX :(\r\n");
     // JPP V1.02 (... end)
 
-    pc.printf("\t\tThat's all folks !\r\n\r\n");
+    pc.printf("\r\n\t\tThat's all folks !\r\n");
 
     // infinite loop
-    for(;;) {
+    for(;;) {     
         // JPP V1.01
-        // transmit an ARINC word
+        // transmit cyclically an ARINC word
         SS = 0; spi.write(0x0C); for (int i=0; i<4; i++) spi.write(ArincWord.b[i]); SS = 1;
         wait_ms(1);
     }
