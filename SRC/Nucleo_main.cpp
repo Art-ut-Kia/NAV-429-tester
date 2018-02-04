@@ -1,19 +1,12 @@
 /*
- *    Project:  Arinc Shield (Naveol Nav429) Tester
+ *  Project:  Arinc Shield (Naveol Nav429) Tester
  *    File:     main.cpp
  *    Author:   Jean-Paul PETILLON
  *
- *  Version: 1.01 dated 2017/04/14 (affected lines are marked "JPP V1.01")
- *  - modified ACLK div from 8 to 16 to accomodate the onboard oscillator
- *    reason: The prototype shields picked-up their clock (8MHz) from the
- *            nucleo board. In the serial definition, the shield have its own
- *            16MHz oscillator onboard.
- *  - after complete autotest, added a cyclic ARINC word transmission so that
- *    the ARINC signal can be analyzed with an oscilloscope or an Ariscope:
- *    http://www.naveol.com/index.php?menu=product&p=4
- *
- *  Version: 1.02 dated 2018/04/14 (affected lines are marked "JPP V1.02")
- *  - added a test step to check RS422 loopback
+ *  Version: 1.03 dated 2018/02/04 (affected lines are marked "JPP V1.03")
+ *  - added a reset command (usefull when reset button is not accessible
+ *    since this board cannot be reset with UART protocol signals as arduino).
+ *    This is achieved by sending the 'r' char from the PC.
  */
 
 #include "mbed.h"
@@ -77,15 +70,15 @@ int main() {
     // Test MR (master reset) signal to HI-3593
     // -------------------------------------------------------------------------
     // write a register
-    SS = 0; spi.write(0x38); spi.write(0x10); SS = 1; // JPP V1.01
+    SS = 0; spi.write(0x38); spi.write(0x10); SS = 1;
     // read back the register
     SS = 0; spi.write(0xd4); unsigned char adr = spi.write(0); SS = 1;
-    bool shieldPresent = adr==0x10; // JPP V1.01
+    bool shieldPresent = adr==0x10;
     // reset HI-3593
     MR = 1; wait_ms(1); MR = 0;
     // read back again the register
     SS = 0; spi.write(0xd4); adr = spi.write(0); SS = 1;
-    if (adr != 0x10 && shieldPresent) { // JPP V1.01
+    if (adr != 0x10 && shieldPresent) {
         pc.printf("Test of Master Reset is:\t\tPASSED\r\n");
     } else {
         pc.printf("Master Reset didn't have the expected effect :(\r\n");
@@ -98,7 +91,7 @@ int main() {
     // Set the HI-3593 ACLK division register to accomodate 16MHz external clock
     SS = 0;
     spi.write(0x38); // Set ACLK division register (HI-3593 data sheet, page 6)
-    spi.write(0x10); // page 9, table 2: 16MHz clock // JPP V1.01
+    spi.write(0x10); // page 9, table 2: 16MHz clock
     SS = 1;
     // set the HI-3593 TX control register  
     SS = 0;
@@ -213,7 +206,6 @@ int main() {
     else pc.printf("Incorrect loop back of DOUT to AIN3 :(\r\n");
     pc.printf("\r\n");
 
-    // JPP V1.02 (begin ...)
     // ---------------------------------------------------------------------------
     // Test of RS422 TX(H/L) and RS422 RX(H/L) signals
     // RS422 TX(H/L) is to be looped back to RS422 RX(H/L)
@@ -237,15 +229,20 @@ int main() {
     pc.printf("\r\n");
     if (rsOk) pc.printf("Test of loop back of RS TX to RX is:\tPASSED\r\n");
     else      pc.printf("Incorrect loop back of RS TX to RX :(\r\n");
-    // JPP V1.02 (... end)
 
     pc.printf("\r\n\t\tThat's all folks !\r\n");
 
     // infinite loop
     for(;;) {     
-        // JPP V1.01
         // transmit cyclically an ARINC word
         SS = 0; spi.write(0x0C); for (int i=0; i<4; i++) spi.write(ArincWord.b[i]); SS = 1;
         wait_ms(1);
+        
+        // JPP V1.03 (begin ...)
+        // check if a reset command is received
+        if (pc.readable()) {
+           if (pc.getc() == 'r') NVIC_SystemReset();
+        }
+        // JPP V1.03 (... end)
     }
 }
