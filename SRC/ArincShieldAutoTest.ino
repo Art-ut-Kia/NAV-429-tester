@@ -173,8 +173,8 @@ void setup() {
   // Test ARINC receive interrupts RINT1 & RINT2 (loopback TX to both RX)
   // -------------------------------------------------------------------------
   // configure interrupts
-  attachInterrupt(digitalPinToInterrupt(3), isr1, RISING);
-  attachInterrupt(digitalPinToInterrupt(2), isr2, RISING);
+  attachInterrupt(digitalPinToInterrupt(R1Int1), isr1, RISING); // JPP V1.03
+  attachInterrupt(digitalPinToInterrupt(R1Int2), isr2, RISING); // JPP V1.03
   RINT1Trigd = false; RINT2Trigd = false;
   // emission of an ARINC word
   ArincWord.w = 0x40302010;
@@ -185,8 +185,8 @@ void setup() {
   else Serial.println(F("RINT1 didn't trigger :("));
   if (RINT2Trigd) Serial.println(F("Test of RINT2 interrupt is:\t\tPASSED"));
   else Serial.println(F("RINT2 didn't trigger :("));
-  detachInterrupt(digitalPinToInterrupt(3));
-  detachInterrupt(digitalPinToInterrupt(2));
+  detachInterrupt(digitalPinToInterrupt(R1Int1)); // JPP V1.03
+  detachInterrupt(digitalPinToInterrupt(R1Int2)); // JPP V1.03
   Serial.println();
 
   // -------------------------------------------------------------------------
