@@ -9,8 +9,11 @@
 //
 // Version V1.02 (18/01/2018) : added a test step for RS422 loopback check
 //
-// Version V1.03 (14/05/2019) : added "volatile" attribute to RINT1Trigd & RINT2Trigd variables
-//                              to fix some occurences of failed interrupts tests
+// Version V1.03 (14/05/2019) : - added "volatile" attribute to RINT1Trigd & RINT2Trigd variables
+//                                to fix some occurrences of failed interrupts tests
+//                              - changed sequencing principle in loop() function for periodic ARINC emission
+//                                to enhance 1ms period accuracy. This was verified with an AriScope from Naveol:
+//             http://naveol.com/index.php?menu=product&p=4
 //
 // This program is distributed in the hope that it will be useful, but without any
 // warranty; without even the implied warranty of merchantability or fitness for a
@@ -44,6 +47,9 @@
 //#define ClkDiv 0x0C
    // for serial production (dedicated 16MHz oscillator on the shield)
 #define ClkDiv 0x10
+
+// next timer rendez-vous
+unsigned long int prevTime; // JPP V1.03
 
 SPISettings HI3593SpiSettings(
   // for arduino, SPI clock will be @16MHz/2 = 8MHz (the nearest from 10MHz)
@@ -240,6 +246,8 @@ void setup() {
   // JPP V1.02 (... end)
   
   Serial.println(F("\t\tThat's all folks !"));
+  
+  prevTime = micros(); // JPP V1.03
 }
 
 void loop() {
@@ -248,5 +256,7 @@ void loop() {
   ArincWord.w = 0x40302010;
   digitalWrite(SS, LOW); SPI.transfer(0x0C); for (int i=0; i<4; i++) SPI.transfer(ArincWord.b[i]); digitalWrite(SS, HIGH);
   // waits 1ms to ensure FIFO is flushed
-  delay(1);
+  unsigned long int nextTime = prevTime + 1000;       // JPP V1.03
+  while((signed long int)(micros() - nextTime) <= 0); // JPP V1.03
+  prevTime = nextTime;                                // JPP V1.03
 }
