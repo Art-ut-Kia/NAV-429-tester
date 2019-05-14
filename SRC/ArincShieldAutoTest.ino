@@ -9,6 +9,9 @@
 //
 // Version V1.02 (18/01/2018) : added a test step for RS422 loopback check
 //
+// Version V1.03 (14/05/2019) : added "volatile" attribute to RINT1Trigd & RINT2Trigd variables
+//                              to fix some occurences of failed interrupts tests
+//
 // This program is distributed in the hope that it will be useful, but without any
 // warranty; without even the implied warranty of merchantability or fitness for a
 // particular purpose. See the GNU General Public License for more details.
@@ -50,13 +53,13 @@ SPISettings HI3593SpiSettings(
 );
 
 // interrupt service routine for digital input #3 (RINT1)
-bool RINT1Trigd;
+volatile bool RINT1Trigd; // JPP V1.03
 void isr1() {
   RINT1Trigd = true;
 }
 
 // interrupt service routine for digital input #2 (RINT2)
-bool RINT2Trigd;
+volatile bool RINT2Trigd; // JPP V1.03
 void isr2() {
   RINT2Trigd = true;
 }
