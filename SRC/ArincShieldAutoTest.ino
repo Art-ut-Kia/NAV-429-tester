@@ -73,7 +73,7 @@ void isr2() {
 void setup() {
   // open serial port for debug
   Serial.begin(9600);
-  Serial.println(F("\t>> Arinc 429 shield test program V1.01 <<\n"));
+  Serial.println(F("\t>> Arinc 429 shield test program V1.03 <<\n")); // JPP V1.03
 
   // in/out pins configuration
   pinMode(SS,     OUTPUT);
