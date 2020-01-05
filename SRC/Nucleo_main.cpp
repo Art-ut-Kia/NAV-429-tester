@@ -1,12 +1,22 @@
-/*
+/**
  *  Project:  Arinc Shield (Naveol Nav429) Tester
- *    File:     main.cpp
- *    Author:   Jean-Paul PETILLON
+ *  Shield vendor: "http://naveol.com/index.php?menu=product&p=3"
+ *  File:     main.cpp
+ *  Author:   Jean-Paul PETILLON
+ *
+ *  note : The MBED library is "mbed" (not mbed-os). Latest tests of this SW
+ *         were performed with version 164, dated 2018/11/08, of this library.
+ *
+ *  Version: 1.04 dated 2020/01/05 (affected lines are marked "JPP V1.04")
+ *  - fixed teh R422 loopback test : in contrast with arduino, serial link
+ *    on D0/D1 pins (the RS422 interface of NAV429) is distinct from the one
+ *    connected to the PC via ST-LINK.
+ *  - added a "clear screen" command at program start
  *
  *  Version: 1.03 dated 2018/02/04 (affected lines are marked "JPP V1.03")
- *  - added a reset command (usefull when reset button is not accessible
- *    since this board cannot be reset with UART protocol signals as arduino).
- *    This is achieved by sending the 'r' char from the PC.
+ *  - added a reset command (this is usefull on nucleo boards when reset button
+ *    is not accessible since these boards cannot be reset with UART protocol
+ *    signals as arduino can). Achieved by sending the 'r' char from the PC.
  */
 
 #include "mbed.h"
@@ -35,8 +45,13 @@ AnalogIn   AIn3   (A2);    // Analog input #3 (0V .. 5V)
 // serial link for debug trace to PC (default: 9600, 8, 1, no parity) 
 Serial pc(SERIAL_TX, SERIAL_RX);
 
+// serial link that emulates arduino UART   // JPP V1.04
+Serial serial(PG_14, PG_9);                 // JPP V1.04
+
 // SPI from/to HI-3593
-SPI spi(PB_5, SPI_MISO, SPI_SCK); // SPI_MOSI (PA_7) is replaced by PB_5
+// note: requires to overwrite "d11_configuration" in file mbed_app.json
+// alternatively, SPI_MOSI may be replaced by PB_5 in following line code
+SPI spi(SPI_MOSI, SPI_MISO, SPI_SCK);
 
 // interrupt service routine for digital input #3 (RINT1)
 bool RINT1Trigd;
@@ -52,6 +67,7 @@ void isr2() {
  
 int main() {
     // welcome message
+    pc.printf("\033[2J"); // clear screen // JPP V1.04
     pc.printf("\t>> NUCLEO-F746ZG / Arinc 429 shield test program <<\r\n\r\n");
 
     // default states on outputs
@@ -204,45 +220,39 @@ int main() {
     else pc.printf("Incorrect loop back of DOUT to AIN2 :(\r\n");
     if (ia3>40000 && fa3<1600) pc.printf("Test of loop back of DOUT to AIN3 is:\tPASSED\r\n");
     else pc.printf("Incorrect loop back of DOUT to AIN3 :(\r\n");
-    pc.printf("\r\n");
 
     // ---------------------------------------------------------------------------
     // Test of RS422 TX(H/L) and RS422 RX(H/L) signals
     // RS422 TX(H/L) is to be looped back to RS422 RX(H/L)
     // ---------------------------------------------------------------------------
-    pc.printf("Place the RS loop back jumpers (test will be performed in 5 seconds) ...");
-    wait_ms(5000);
     bool rsOk = true;
-
-    pc.putc(0xaa);
+    char r;
+    serial.putc(0xaa);                     // JPP V1.04
     wait_ms(2);
-    if (pc.readable()) {
-        if (pc.getc() != 0xaa) rsOk = false;
+    if (serial.readable()) {               // JPP V1.04
+        r = serial.getc();                 // JPP V1.04
+        if (r != 0xaa) rsOk = false;
     } else rsOk = false;
-
-    pc.putc(0x55);
+    serial.putc(0x55);                     // JPP V1.04
     wait_ms(2);
-    if (pc.readable()) {
-        if (pc.getc() != 0x55) rsOk = false;
+    if (serial.readable()) {               // JPP V1.04
+        r = serial.getc();                 // JPP V1.04
+        if (r != 0x55) rsOk = false;
     } else rsOk = false;
-
-    pc.printf("\r\n");
-    if (rsOk) pc.printf("Test of loop back of RS TX to RX is:\tPASSED\r\n");
-    else      pc.printf("Incorrect loop back of RS TX to RX :(\r\n");
+    if (rsOk) pc.printf("Test of loop back of RS422 TX to RX is:\tPASSED\r\n");
+    else      pc.printf("Incorrect loop back of RS422 TX to RX :(\r\n");
 
     pc.printf("\r\n\t\tThat's all folks !\r\n");
 
     // infinite loop
-    for(;;) {     
+    while (1) {     
         // transmit cyclically an ARINC word
         SS = 0; spi.write(0x0C); for (int i=0; i<4; i++) spi.write(ArincWord.b[i]); SS = 1;
-        wait_ms(1);
+        wait_us(360); // an ARINC word is 360µs => should not overflow thanks to SPI transmission duration
         
         // JPP V1.03 (begin ...)
         // check if a reset command is received
-        if (pc.readable()) {
-           if (pc.getc() == 'r') NVIC_SystemReset();
-        }
+        if (pc.readable() && (pc.getc() == 'r')) NVIC_SystemReset();
         // JPP V1.03 (... end)
     }
 }
