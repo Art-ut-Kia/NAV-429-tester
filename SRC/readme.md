@@ -1,8 +1,8 @@
 
-ArincShieldAutoTest.ino is the sole software file of this project.
+For ARDUINO-based projects, "ArincShieldAutoTest.ino" is the sole software file required.
 Download it in an arduino UNO and you are done !
 
-The same in Nucleo world :
+Nearly as simple in Nucleo world :
 * upload "nucleo_main.cpp" (rename it "main.cpp") and "mbed_app.json" in your mbed account,
 * compile and download into a nucleo board
 * look at the trace messages sent by the nucleo with e.g. hyperterminal
