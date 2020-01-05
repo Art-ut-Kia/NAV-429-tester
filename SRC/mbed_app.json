@@ -1,0 +1,9 @@
+{
+    "target_overrides":
+    {
+        "NUCLEO_F767ZI":
+        {
+            "target.d11_configuration" : "PB_5"
+        }
+    }
+}
