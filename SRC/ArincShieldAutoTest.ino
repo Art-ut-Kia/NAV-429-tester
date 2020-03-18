@@ -220,13 +220,13 @@ void setup() {
   else                    Serial.println(F("Incorrect loop back of DOUT to DIN0 :("));
   if (id1==1 && fd1==0)   Serial.println(F("Test of loop back of DOUT to DIN1 is:\tPASSED"));
   else                    Serial.println(F("Incorrect loop back of DOUT to DIN1 :("));
-  if (ia0>923 && fa0<100) Serial.println(F("Test of loop back of DOUT to AIN0 is:\tPASSED"));
+  if (ia0>800 && fa0<100) Serial.println(F("Test of loop back of DOUT to AIN0 is:\tPASSED"));
   else                    Serial.println(F("Incorrect loop back of DOUT to AIN0 :("));
-  if (ia1>923 && fa1<100) Serial.println(F("Test of loop back of DOUT to AIN1 is:\tPASSED"));
+  if (ia1>800 && fa1<100) Serial.println(F("Test of loop back of DOUT to AIN1 is:\tPASSED"));
   else                    Serial.println(F("Incorrect loop back of DOUT to AIN1 :("));
-  if (ia2>923 && fa2<100) Serial.println(F("Test of loop back of DOUT to AIN2 is:\tPASSED"));
+  if (ia2>800 && fa2<100) Serial.println(F("Test of loop back of DOUT to AIN2 is:\tPASSED"));
   else                    Serial.println(F("Incorrect loop back of DOUT to AIN2 :("));
-  if (ia3>923 && fa3<100) Serial.println(F("Test of loop back of DOUT to AIN3 is:\tPASSED"));
+  if (ia3>800 && fa3<100) Serial.println(F("Test of loop back of DOUT to AIN3 is:\tPASSED"));
   else                    Serial.println(F("Incorrect loop back of DOUT to AIN3 :("));
   Serial.println();
   
